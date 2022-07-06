@@ -19,9 +19,9 @@ function SortPrice({ currentValue, onChange }) {
       indicatorColor="primary"
       aria-label="wrapped label tabs example"
     >
-      <Tab label="Price giảm dần" value="salePrice:DESC" />
+      <Tab label="giá giảm dần" value="salePrice:DESC" />
 
-      <Tab label="Price tăng dần" value="salePrice:ASC" />
+      <Tab label="giá tăng dần" value="salePrice:ASC" />
     </Tabs>
   );
 }
