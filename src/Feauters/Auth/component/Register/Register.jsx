@@ -5,7 +5,9 @@ import RegisterForm from "../RegisterForm/RegisterForm";
 Register.propTypes = {};
 
 function Register(props) {
-  const handleSubmit = () => {};
+  const handleSubmit = (values) => {
+    console.log(values);
+  };
   return (
     <div>
       <RegisterForm onSubmit={handleSubmit} />

@@ -7,8 +7,7 @@ import * as yup from "yup";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
+
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
@@ -16,8 +15,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import PasswordField from "../../../../components/form-controls/PasswordField";
 
 RegisterForm.propTypes = {
   onSubmit: PropTypes.func,
@@ -25,8 +23,26 @@ RegisterForm.propTypes = {
 
 function RegisterForm(props) {
   const schema = yup.object().shape({
-    fullName: yup.string().required("please "),
+    fullName: yup
+      .string()
+      .required("Please enter your fullname ")
+      .test("Please enter at least two words", (value) => {
+        return value.split(" ").length >= 2;
+      }),
+    email: yup
+      .string()
+      .required("Please enter your email")
+      .email("Please enter a valid email address"),
+    password: yup
+      .string()
+      .required("Please enter your password")
+      .min(6, "Please enter at least six"),
+    retypePassword: yup
+      .string()
+      .required("Please retype your password")
+      .oneOf([yup.ref("password")], "Password not match"),
   });
+
   const form = useForm({
     defaultValues: {
       fullName: "",
@@ -39,23 +55,40 @@ function RegisterForm(props) {
 
   const handleSubmit = (values) => {
     console.log(values);
+    onsubmit(values);
+    form.reset();
   };
   return (
     <Box
       sx={{
-        marginTop: 8,
+        marginTop: 6,
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
       }}
     >
-      <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-        <LockOutlinedIcon />
-      </Avatar>
-      <Typography component="h1" variant="h5">
-        Sign up
-      </Typography>
-      <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+      <Box
+        sx={{
+          p: 2,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <LockOutlinedIcon />
+        </Avatar>
+        <Typography component="h1" variant="h5">
+          Sign up
+        </Typography>
+      </Box>
+
+      <form
+        component="form"
+        noValidate
+        onSubmit={form.handleSubmit(handleSubmit)}
+        sx={{ mt: 3 }}
+      >
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <InputField name="fullName" label="Full Name" form={form} />
@@ -64,10 +97,10 @@ function RegisterForm(props) {
             <InputField name="email" label="Email" form={form} />
           </Grid>
           <Grid item xs={12}>
-            <InputField name="password" label="Password" form={form} />
+            <PasswordField name="password" label="Password" form={form} />
           </Grid>
           <Grid item xs={12}>
-            <InputField
+            <PasswordField
               name="retypePassword"
               label="Retype Password"
               form={form}
@@ -95,7 +128,7 @@ function RegisterForm(props) {
             </Link>
           </Grid>
         </Grid>
-      </Box>
+      </form>
     </Box>
     // <form onSubmit={form.handleSubmit(handleSubmit)}>
     //   <InputField name="fullName" label="" form={form} />
